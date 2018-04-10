@@ -1,11 +1,14 @@
 package com.springapp.mvc.controller;
 
+import com.springapp.mvc.model.User;
 import com.springapp.mvc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import static com.springapp.mvc.model.Gender.*;
 
@@ -20,10 +23,26 @@ public class UserController {
         return "redirect:/login";
     }
 
+    @RequestMapping(value = "/secret")
+    public String returnSecret(){ return "secret"; }
+
+    @RequestMapping(value = "/registration", method = RequestMethod.GET)
+    public String printRegistration(Model model) {
+        model.addAttribute("message", "Hi there! Register, please");
+        return "registration"; }
+
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String printWelcome(Model model) {
-        model.addAttribute("message", "Hi there! Log in, please");
+        if(!model.containsAttribute("message"))
+            model.addAttribute("message", "Hi there! Log in, please");
         return "index";
+    }
+
+    @RequestMapping(value = "/registration", method = RequestMethod.POST)
+    public String registerUser(Model model, @ModelAttribute("user") User user, RedirectAttributes attributes) {
+        userService.registerNewUser(user);
+        attributes.addFlashAttribute("message","Succesful registration");
+        return "redirect:/login";
     }
 
     @RequestMapping(value = "/error")
@@ -50,5 +69,4 @@ public class UserController {
         model.addAttribute("list", userService.getAllByGender(FEMALE));
         return "gender";
     }
-
 }

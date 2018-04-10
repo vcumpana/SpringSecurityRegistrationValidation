@@ -44,4 +44,6 @@ public class UserDao {
 
         return query.getResultList();
     }
+
+    public void insertNewUser(User user) { sessionFactory.getCurrentSession().save(user); }
 }

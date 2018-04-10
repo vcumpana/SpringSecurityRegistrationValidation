@@ -1,5 +1,6 @@
 package com.springapp.mvc.service;
 
+import com.springapp.mvc.model.Role;
 import com.springapp.mvc.model.User;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         User user = userService.getUserByName(username).get();
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        for (Role role: user.getRoles())
+            grantedAuthorities.add(new SimpleGrantedAuthority(role.getRoleName().name()));
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(), user.getPassword(), grantedAuthorities);
     }

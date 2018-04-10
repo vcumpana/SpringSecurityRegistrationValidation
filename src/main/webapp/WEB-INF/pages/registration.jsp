@@ -1,9 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8" %>
-<%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%--
+  Created by IntelliJ IDEA.
+  User: victor
+ Date: 4/5/18
+  Time: 6:18 PM
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
+    <title>Registration</title>
     <style type="text/css">
         <%@include file="../resources/style.css"%>
     </style>
@@ -11,7 +17,7 @@
 <body>
 <div align="center">
     <div style="width: 300px; height: 500px;">
-        <form:form method="POST" action="/login">
+        <form:form method="POST" action="/registration">
             <div class="imgcontainer">
                 <img src="../resources/incognito.jpg" alt="Avatar" class="avatar">
             </div>
@@ -26,14 +32,11 @@
 
                 <label>Gender</label>
                 <p>
-                <input type="radio" name="gender" value="MALE" checked>Male
-                <input type="radio" name="gender" value="FEMALE">Female<br></p>
-                <button type="submit">Login</button>
+                    <input type="radio" name="gender" value="MALE" checked>Male
+                    <input type="radio" name="gender" value="FEMALE">Female<br></p>
+                <button type="submit">Register</button>
             </div>
         </form:form>
-        <form action="/registration" method="GET">
-            <button type="submit">New user</button>
-        </form>
     </div>
 </div>
 </body>

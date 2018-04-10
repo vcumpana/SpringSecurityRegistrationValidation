@@ -109,12 +109,13 @@
             <version>1.4</version>
         </dependency>
 
-        <!-- Postgres -->
+        <!-- https://mvnrepository.com/artifact/postgresql/postgresql -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>9.4.1212.jre7</version>
+            <version>42.2.2</version>
         </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/hsqldb/hsqldb -->
         <dependency>
@@ -146,6 +147,12 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-taglibs</artifactId>
             <version>${spring.security.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.18</version>
         </dependency>
     </dependencies>
 
