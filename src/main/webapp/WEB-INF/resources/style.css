@@ -63,3 +63,7 @@ span.psw {
         width: 100%;
     }
 }
+
+.error {
+    color: #f44336;
+}

@@ -1,32 +1,53 @@
 package com.springapp.mvc.model;
 
+import com.springapp.mvc.constraints.EmailUniquenessConstraint;
+import com.springapp.mvc.constraints.RePasswordConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.util.Set;
-
 
 @Entity
 @Table(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+//@RePasswordConstraint(field = "password",confirmingField = "repeatPassword", message = "{user.repassword.invalid}")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "username")
+
+    @NotEmpty(message ="{user.name.empty}" )
+    private String name;
+
+    @NotEmpty(message ="{user.surname.empty}" )
+    private String surname;
+
+    @Size(min = 2, message = "{user.username.invalid}")
+    @Column(unique = true)
     private String username;
 
-    @Column(name = "password")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[!@#$&*+=_.])(?=.*[0-9]).(?=\\S+$).{8,}$", message ="{user.password.invalid}" )
     private String password;
 
-    @Column(name = "gender")
+    @Transient
+    private String repeatPassword;
+
+    private String birthDate;
+
+    @NotNull(message = "{user.gender.empty}")
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @Column(unique = true)
+    @Email(message = "{user.email.invalid}")
+    @EmailUniquenessConstraint(message = "{user.email.exists}")
+    private String email;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "users_role",

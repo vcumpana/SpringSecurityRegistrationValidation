@@ -8,12 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static com.springapp.mvc.model.Gender.*;
 
 @Repository
 public class UserDao {
@@ -46,4 +42,18 @@ public class UserDao {
     }
 
     public void insertNewUser(User user) { sessionFactory.getCurrentSession().save(user); }
+
+    public boolean updateUser(User user) {
+//        User newUser = getUserByName(user.getUsername()).get();
+//        newUser.setEmail(user.getEmail());
+        sessionFactory.getCurrentSession().merge(user);
+        return true;
+    }
+
+    public boolean mailIsPresentInDB(String mail) {
+        Query query = sessionFactory.getCurrentSession().createQuery("from User where email=:mail");
+        query.setParameter("mail", mail);
+        List<User> userlist = query.getResultList();
+        return userlist.size() == 0 ? true : false;
+    }
 }

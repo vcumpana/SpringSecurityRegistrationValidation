@@ -9,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Registration</title>
+    <title>Edit personal data</title>
     <style type="text/css">
         <%@include file="../resources/style.css"%>
     </style>
@@ -17,7 +17,7 @@
 <body>
 <div align="center">
     <div style="width: 300px; height: 500px;">
-        <form:form action="/registration" method="POST"  modelAttribute="user">
+        <form:form action="/edituser/${user.id}" method="POST"  modelAttribute="user">
             <div class="imgcontainer">
                 <img src="../resources/incognito.jpg" alt="Avatar" class="avatar">
             </div>
@@ -57,7 +57,7 @@
                 <form:input type="text" path="repeatPassword" required="required"/>
                         <form:errors path="repeatPassword" cssClass="error" />
 
-                <button type="submit">Register</button>
+                <button type="submit">Save changes</button>
             </div>
         </form:form>
     </div>

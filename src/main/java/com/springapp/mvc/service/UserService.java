@@ -5,9 +5,6 @@ import com.springapp.mvc.model.Gender;
 import com.springapp.mvc.model.Role;
 import com.springapp.mvc.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,4 +42,14 @@ public class UserService {
         roles.add(new Role(ROLE_USER));
         user.setRoles(roles);
         userDao.insertNewUser(user); }
+
+    public boolean saveChangesUser(User user) {
+        if (userDao.updateUser(user))
+            return true;
+        return false;
+    }
+
+    public boolean mailIsPresentInDB(String mail) {
+        return userDao.mailIsPresentInDB(mail);
+    }
 }
