@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -51,5 +52,17 @@ public class UserService {
 
     public boolean mailIsPresentInDB(String mail) {
         return userDao.mailIsPresentInDB(mail);
+    }
+
+    public boolean usernameIsPresentInDB(String username) {
+        return userDao.usernameIsPresentInDB(username);
+    }
+
+    public User getUserById(int id) {
+        return userDao.getUserById(id);
+    }
+
+    public void deleteUserbyId(int id) {
+        userDao.deleteUserById(id);
     }
 }

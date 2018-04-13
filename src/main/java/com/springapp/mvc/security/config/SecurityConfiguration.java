@@ -9,9 +9,19 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 
 @Configuration
@@ -21,6 +31,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     @Qualifier("userDetailsService")
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    DataS
+
+    private LogoutSuccessHandler logoutSuccessHandler = new SimpleUrlLogoutSuccessHandler();
 
     @Autowired
     public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
@@ -48,11 +63,22 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login").permitAll()
                 .antMatchers("/registration").permitAll()
                 .antMatchers("/allusers", "/showMales", "/showFemales").authenticated()
-                .antMatchers("/secret").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/secret", "admin/panel").access("hasRole('ROLE_ADMIN')")
                 .and().formLogin().loginPage("/login")
                 .defaultSuccessUrl("/allusers")
                 .failureUrl("/error")
                 .usernameParameter("username").passwordParameter("password")
+                .and().rememberMe().rememberMeParameter("remember-me")
                 .and().csrf().disable();
+        http.logout().deleteCookies()
+                .logoutUrl("/logout").invalidateHttpSession(true).clearAuthentication(true)
+                .logoutSuccessUrl("/login").logoutSuccessHandler(logoutSuccessHandler);
+    }
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl tokenRepositoryImpl = new JdbcTokenRepositoryImpl();
+        tokenRepositoryImpl.setDataSource(dataSource);
+        return tokenRepositoryImpl;
     }
 }

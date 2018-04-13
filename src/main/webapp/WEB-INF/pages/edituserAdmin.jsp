@@ -17,7 +17,7 @@
 <body>
 <div align="center">
     <div style="width: 300px; height: 500px;">
-        <form:form action="/edituser" method="POST"  modelAttribute="user">
+        <form:form action="/admin/edituser/${user.id}" method="POST"  modelAttribute="user">
             <div class="imgcontainer">
                 <img src="../resources/incognito.jpg" alt="Avatar" class="avatar">
             </div>

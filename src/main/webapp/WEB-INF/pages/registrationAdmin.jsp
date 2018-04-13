@@ -9,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Edit personal data</title>
+    <title>Registration</title>
     <style type="text/css">
         <%@include file="../resources/style.css"%>
     </style>
@@ -17,7 +17,7 @@
 <body>
 <div align="center">
     <div style="width: 300px; height: 500px;">
-        <form:form action="/edituser" method="POST"  modelAttribute="user">
+        <form:form action="/admin/newuser" method="POST"  modelAttribute="user">
             <div class="imgcontainer">
                 <img src="../resources/incognito.jpg" alt="Avatar" class="avatar">
             </div>
@@ -41,25 +41,27 @@
                 <form:input type="date" path="birthDate"/>
                 <form:errors path="birthDate" cssClass="error" /><br>
 
+
                 <label>Email address</label>
                 <form:input type="text" path="email" required="required"/>
-                <form:errors path="email" cssClass="error" /><br>
+                <form:errors path="email" cssClass="error" />
                 <span style="color: red">${uniquemail}</span><br>
 
                 <label>Username</label>
                 <form:input type="text" path="username" required="required"/>
-                        <form:errors path="username" cssClass="error" /><br>
+                        <form:errors path="username" cssClass="error" />
                 <span style="color: red">${uniqueusername}</span><br>
+                <br>
 
                 <label>Password</label>
                 <form:input type="text" path="password" required="required"/>
                         <form:errors path="password" cssClass="error" /><br>
                 <label>Repeat password</label>
                 <form:input type="text" path="repeatPassword" required="required"/>
-                        <form:errors path="repeatPassword" cssClass="error" />
                 <span style="color: red">${repassword}</span><br>
 
-                <button type="submit">Save changes</button>
+
+                <button type="submit">Register new user</button>
             </div>
         </form:form>
     </div>

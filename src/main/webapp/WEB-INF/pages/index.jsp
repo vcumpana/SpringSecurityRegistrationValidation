@@ -28,6 +28,9 @@
                 <p>
                 <input type="radio" name="gender" value="MALE" checked>Male
                 <input type="radio" name="gender" value="FEMALE">Female<br></p>
+
+                <label>Gender</label>
+                <input type="checkbox" name="remember-me" />
                 <button type="submit">Login</button>
             </div>
         </form:form>

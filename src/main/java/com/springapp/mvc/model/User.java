@@ -5,6 +5,8 @@ import com.springapp.mvc.constraints.RePasswordConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Set;
@@ -15,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 //@RePasswordConstraint(field = "password",confirmingField = "repeatPassword", message = "{user.repassword.invalid}")
-public class User {
+public class User{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,10 +48,10 @@ public class User {
 
     @Column(unique = true)
     @Email(message = "{user.email.invalid}")
-    @EmailUniquenessConstraint(message = "{user.email.exists}")
+   // @EmailUniquenessConstraint(message = "{user.email.exists}")
     private String email;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "users_role",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})

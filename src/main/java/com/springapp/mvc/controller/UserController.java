@@ -3,6 +3,8 @@ package com.springapp.mvc.controller;
 import com.springapp.mvc.model.User;
 import com.springapp.mvc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 
 import java.security.Security;
+import java.util.Collection;
 import java.util.Optional;
 
 import static com.springapp.mvc.model.Gender.*;
@@ -55,24 +58,49 @@ public class UserController {
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public String registerUser(Model model, @Valid @ModelAttribute("user") User user,  BindingResult result,RedirectAttributes attributes) {
-        if (result.hasErrors())
+        boolean mailIsPresent = userService.mailIsPresentInDB(user.getEmail());
+        if (mailIsPresent)
+            model.addAttribute("uniquemail", "Choose another email!A user with this email already exists.");
+        boolean usernameIsPresent = userService.usernameIsPresentInDB(user.getUsername());
+        if (usernameIsPresent)
+            model.addAttribute("uniqueusername", "This username already exists");
+        boolean doesPassMatch = user.getPassword().equals(user.getRepeatPassword());
+        if (!doesPassMatch)
+            model.addAttribute("repassword", "Repeated password does not match.");
+        if (result.hasErrors() || mailIsPresent || usernameIsPresent || !doesPassMatch)
             return "registration";
         userService.registerNewUser(user);
         attributes.addFlashAttribute("message", "Succesful registration");
         return "redirect:/login";
     }
 
-    @RequestMapping(value = "/edituser", method = RequestMethod.POST)
+
+        @RequestMapping(value = "/edituser", method = RequestMethod.POST)
     public String saveChangesUser(Model model, @Valid @ModelAttribute("user") User user, BindingResult result){
-        if (result.hasErrors())
-            return "edituser";
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> loggedUser = userService.getUserByName(username);
+        boolean mailIsPresent = userService.mailIsPresentInDB(user.getEmail());
+        if (mailIsPresent)
+            model.addAttribute("uniquemail", "Choose another email!A user with this email already exists.");
+        boolean usernameIsPresent = userService.usernameIsPresentInDB(user.getUsername());
+        if (usernameIsPresent)
+            model.addAttribute("uniqueusername", "This username already exists");
+        boolean doesPassMatch = user.getPassword().equals(user.getRepeatPassword());
+        if (!doesPassMatch)
+            model.addAttribute("repassword", "Repeated password does not match.");
+        if (result.hasErrors() || mailIsPresent || usernameIsPresent || !doesPassMatch)
+            return "edituser";
+
         if (loggedUser.isPresent())
             user.setId(loggedUser.get().getId());
-        if (userService.saveChangesUser(user))
-            ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).setUsername(user.getUsername());
-        return "welcome";
+        if (userService.saveChangesUser(user)) {
+           // ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).setUsername(user.getUsername());
+            Collection<SimpleGrantedAuthority> nowAuthorities =(Collection<SimpleGrantedAuthority>)SecurityContextHolder
+                    .getContext().getAuthentication().getAuthorities();
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), nowAuthorities);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+            return "welcome";
     }
 
     @RequestMapping(value = "/edituser", method = RequestMethod.GET)
@@ -107,5 +135,11 @@ public class UserController {
         model.addAttribute("gender", "girls");
         model.addAttribute("list", userService.getAllByGender(FEMALE));
         return "gender";
+    }
+
+    @RequestMapping(value = "/admin/panel", method = RequestMethod.GET)
+    public String showAdminPanel(Model model){
+        model.addAttribute("users", userService.getAllUsers());
+        return "adminpanel";
     }
 }

@@ -54,6 +54,26 @@ public class UserDao {
         Query query = sessionFactory.getCurrentSession().createQuery("from User where email=:mail");
         query.setParameter("mail", mail);
         List<User> userlist = query.getResultList();
-        return userlist.size() == 0 ? true : false;
+        return userlist.size() == 0 ? false : true;
+    }
+
+    public boolean usernameIsPresentInDB(String username) {
+        Query query = sessionFactory.getCurrentSession().createQuery("from User where username=:user");
+        query.setParameter("user", username);
+        List<User> userlist = query.getResultList();
+        return userlist.size() == 0 ? false : true;
+    }
+
+    public User getUserById(int id) {
+        Query query = sessionFactory.getCurrentSession().createQuery("from User where id=:id");
+        query.setParameter("id", id);
+        User user = (User)query.getSingleResult();
+        return  user;
+    }
+
+    public void deleteUserById(int id) {
+        Query query = sessionFactory.getCurrentSession().createQuery(" delete from User where id=:id");
+        query.setParameter("id", id);
+        query.executeUpdate();
     }
 }

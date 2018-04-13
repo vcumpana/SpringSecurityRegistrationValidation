@@ -41,11 +41,14 @@
             <props>
                 <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL9Dialect</prop>
                 <prop key="hibernate.show_sql">true</prop>
-                <prop key="hibernate.hbm2ddl.auto">create-drop</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
                 <prop key="debug">true</prop>
             </props>
         </property>
     </bean>
+
+    <bean id="validator"
+          class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
 
     <!--Transaction Manager-->
     <tx:annotation-driven/>

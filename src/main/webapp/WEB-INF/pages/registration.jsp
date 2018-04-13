@@ -44,18 +44,22 @@
 
                 <label>Email address</label>
                 <form:input type="text" path="email" required="required"/>
-                <form:errors path="email" cssClass="error" /><br>
+                <form:errors path="email" cssClass="error" />
+                <span style="color: red">${uniquemail}</span><br>
 
                 <label>Username</label>
                 <form:input type="text" path="username" required="required"/>
-                        <form:errors path="username" cssClass="error" /><br>
+                        <form:errors path="username" cssClass="error" />
+                <span style="color: red">${uniqueusername}</span><br>
+                <br>
 
                 <label>Password</label>
                 <form:input type="text" path="password" required="required"/>
                         <form:errors path="password" cssClass="error" /><br>
                 <label>Repeat password</label>
                 <form:input type="text" path="repeatPassword" required="required"/>
-                        <form:errors path="repeatPassword" cssClass="error" />
+                <span style="color: red">${repassword}</span><br>
+
 
                 <button type="submit">Register</button>
             </div>
