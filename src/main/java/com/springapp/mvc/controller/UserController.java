@@ -4,22 +4,22 @@ import com.springapp.mvc.model.User;
 import com.springapp.mvc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import java.security.Security;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -58,10 +58,10 @@ public class UserController {
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public String registerUser(Model model, @Valid @ModelAttribute("user") User user,  BindingResult result,RedirectAttributes attributes) {
-        boolean mailIsPresent = userService.mailIsPresentInDB(user.getEmail());
+        boolean mailIsPresent = userService.mailIsPresentInDB(user.getEmail(), user.getId());
         if (mailIsPresent)
             model.addAttribute("uniquemail", "Choose another email!A user with this email already exists.");
-        boolean usernameIsPresent = userService.usernameIsPresentInDB(user.getUsername());
+        boolean usernameIsPresent = userService.usernameIsPresentInDB(user.getUsername(), user.getId());
         if (usernameIsPresent)
             model.addAttribute("uniqueusername", "This username already exists");
         boolean doesPassMatch = user.getPassword().equals(user.getRepeatPassword());
@@ -79,10 +79,10 @@ public class UserController {
     public String saveChangesUser(Model model, @Valid @ModelAttribute("user") User user, BindingResult result){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> loggedUser = userService.getUserByName(username);
-        boolean mailIsPresent = userService.mailIsPresentInDB(user.getEmail());
+        boolean mailIsPresent = userService.mailIsPresentInDB(user.getEmail(), user.getId());
         if (mailIsPresent)
             model.addAttribute("uniquemail", "Choose another email!A user with this email already exists.");
-        boolean usernameIsPresent = userService.usernameIsPresentInDB(user.getUsername());
+        boolean usernameIsPresent = userService.usernameIsPresentInDB(user.getUsername(), user.getId());
         if (usernameIsPresent)
             model.addAttribute("uniqueusername", "This username already exists");
         boolean doesPassMatch = user.getPassword().equals(user.getRepeatPassword());

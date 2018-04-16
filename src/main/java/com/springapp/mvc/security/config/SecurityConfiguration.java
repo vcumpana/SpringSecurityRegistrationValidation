@@ -21,6 +21,7 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 import java.io.IOException;
 
 
@@ -33,7 +34,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    DataS
+    DataSource dataSource;
+
+//    @Autowired
+//    DataS
 
     private LogoutSuccessHandler logoutSuccessHandler = new SimpleUrlLogoutSuccessHandler();
 
@@ -63,12 +67,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login").permitAll()
                 .antMatchers("/registration").permitAll()
                 .antMatchers("/allusers", "/showMales", "/showFemales").authenticated()
-                .antMatchers("/secret", "admin/panel").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/secret", "/admin/**").access("hasRole('ROLE_ADMIN')")
                 .and().formLogin().loginPage("/login")
                 .defaultSuccessUrl("/allusers")
                 .failureUrl("/error")
                 .usernameParameter("username").passwordParameter("password")
-                .and().rememberMe().rememberMeParameter("remember-me")
+                .and().rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository())
                 .and().csrf().disable();
         http.logout().deleteCookies()
                 .logoutUrl("/logout").invalidateHttpSession(true).clearAuthentication(true)
@@ -76,7 +80,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public PersistentTokenRepository persistentTokenRepository() {
+    public PersistentTokenRepository tokenRepository() {
         JdbcTokenRepositoryImpl tokenRepositoryImpl = new JdbcTokenRepositoryImpl();
         tokenRepositoryImpl.setDataSource(dataSource);
         return tokenRepositoryImpl;

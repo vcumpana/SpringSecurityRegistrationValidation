@@ -35,7 +35,9 @@
                 <label>Gender</label>
                 <p>
                     <form:radiobutton path="gender" value="MALE" />Male
-                    <form:radiobutton path="gender" value="FEMALE" label="Female"/><br></p>
+                    <form:radiobutton path="gender" value="FEMALE" label="Female"/>
+                    <form:errors path="gender" cssClass="error" /><br>
+                    <br></p>
 
                 <label>Birthday</label>
                 <form:input type="date" path="birthDate"/>

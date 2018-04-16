@@ -35,7 +35,9 @@
                 <label>Gender</label>
                 <p>
                     <form:radiobutton path="gender" value="MALE" />Male
-                    <form:radiobutton path="gender" value="FEMALE" label="Female"/><br></p>
+                    <form:radiobutton path="gender" value="FEMALE" label="Female"/>
+                    <form:errors path="gender" cssClass="error" /><br>
+                    <br></p>
 
                 <label>Birthday</label>
                 <form:input type="date" path="birthDate"/>
@@ -53,6 +55,13 @@
                 <span style="color: red">${uniqueusername}</span><br>
                 <br>
 
+                <label>Roles</label>
+                <form:select multiple="true" path="roles" items="${roles}" itemLabel="roleName" itemValue="roleName" />
+                <%--<form:select path="roles" multiple="">--%>
+                    <%--<<option value="ROLE_ADMIN">ADMIN</option>--%>
+                    <%--&lt;%&ndash;<input type="radio" value="ROLE_USER">USER<input>&ndash;%&gt;--%>
+                    <%--<option value="ROLE_USER" selected>USER</option>--%>
+                <%--</form:select>--%>
                 <label>Password</label>
                 <form:input type="text" path="password" required="required"/>
                         <form:errors path="password" cssClass="error" /><br>

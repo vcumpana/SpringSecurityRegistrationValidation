@@ -16,5 +16,6 @@
 <sec:authorize url="/admin">
     This content will only be visible to users who are authorized to send requests to the "/admin" URL.
 </sec:authorize>
+<a href="/logout">Logout</a>
 </body>
 </html>

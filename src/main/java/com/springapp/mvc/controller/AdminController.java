@@ -1,23 +1,21 @@
 package com.springapp.mvc.controller;
 
+import com.springapp.mvc.model.Role;
+import com.springapp.mvc.model.RoleName;
 import com.springapp.mvc.model.User;
 import com.springapp.mvc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.Set;
 
 @Controller
 public class AdminController {
@@ -32,11 +30,11 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/admin/newuser", method = RequestMethod.POST)
-    public String updateUserAdmin(Model model, @Valid @ModelAttribute("user") User user,  BindingResult result) {
-        boolean mailIsPresent = userService.mailIsPresentInDB(user.getEmail());
+    public String newUserAdmin(Model model, @Valid @ModelAttribute("user") User user,  BindingResult result) {
+        boolean mailIsPresent = userService.mailIsPresentInDB(user.getEmail(), user.getId());
         if (mailIsPresent)
             model.addAttribute("uniquemail", "Choose another email!A user with this email already exists.");
-        boolean usernameIsPresent = userService.usernameIsPresentInDB(user.getUsername());
+        boolean usernameIsPresent = userService.usernameIsPresentInDB(user.getUsername(), user.getId());
         if (usernameIsPresent)
             model.addAttribute("uniqueusername", "This username already exists");
         boolean doesPassMatch = user.getPassword().equals(user.getRepeatPassword());
@@ -50,6 +48,7 @@ public class AdminController {
 
     @RequestMapping(value = "/admin/newuser", method = RequestMethod.GET)
     public String printRegistration(Model model) {
+        model.addAttribute("roles", userService.getRoles());
         model.addAttribute("message", "New user by Admin");
         model.addAttribute("user", new User());
         return "registrationAdmin";
@@ -63,12 +62,12 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/admin/edituser/{id}", method = RequestMethod.POST)
-    public String saveChangesUser(Model model, @Valid @ModelAttribute("user") User user, BindingResult result,
+    public String updateUserAdmin(Model model, @Valid @ModelAttribute("user") User user, BindingResult result,
                                   @PathVariable("id") int id){
-        boolean mailIsPresent = userService.mailIsPresentInDB(user.getEmail());
+        boolean mailIsPresent = userService.mailIsPresentInDB(user.getEmail(), user.getId());
         if (mailIsPresent)
             model.addAttribute("uniquemail", "Choose another email!A user with this email already exists.");
-        boolean usernameIsPresent = userService.usernameIsPresentInDB(user.getUsername());
+        boolean usernameIsPresent = userService.usernameIsPresentInDB(user.getUsername(), user.getId());
         if (usernameIsPresent)
             model.addAttribute("uniqueusername", "This username already exists");
         boolean doesPassMatch = user.getPassword().equals(user.getRepeatPassword());
@@ -86,5 +85,20 @@ public class AdminController {
 //            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         return "redirect:/admin/panel";
+    }
+
+    @InitBinder
+    protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
+//do whatever
+        /* "foos" is the name of the property that we want to register a custom editor to
+         * you can set property name null and it means you want to register this editor for occurrences of Set class in * command object
+         */
+        binder.registerCustomEditor(Collection.class, "roles", new CustomCollectionEditor(Collection.class) {
+            @Override
+            protected Object convertElement(Object element) {
+                String rolename = (String) element;
+                return new Role(0, RoleName.valueOf(rolename));
+            }
+        });
     }
 }

@@ -24,6 +24,7 @@
             <h3 align="center" style="color:maroon;">${message}</h3>
 
             <div class="container" align="left">
+
                 <label>Name</label>
                 <form:input type="text" path="name" required="required"/>
                 <form:errors path="name" cssClass="error" /><br>
@@ -35,7 +36,9 @@
                 <label>Gender</label>
                 <p>
                     <form:radiobutton path="gender" value="MALE" />Male
-                    <form:radiobutton path="gender" value="FEMALE" label="Female"/><br></p>
+                    <form:radiobutton path="gender" value="FEMALE" label="Female"/>
+                    <form:errors path="gender" cssClass="error" /><br>
+                    <br></p>
 
                 <label>Birthday</label>
                 <form:input type="date" path="birthDate"/>

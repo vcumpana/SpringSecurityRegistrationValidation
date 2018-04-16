@@ -62,15 +62,16 @@
                     </c:forEach>
                 </td>
                 <td>
-                    <button type="submit" ><a href="/admin/deleteuser/${user.id}">Delete</a></button>
-                    <button type="submit"><a href="/admin/edituser/${user.id}">Update</a></button>
+                    <a href="/admin/deleteuser/${user.id}">Delete</a>
+                    <a href="/admin/edituser/${user.id}">Update</a>
                 </td>
             </tr>
         </c:forEach>
         </tbody>
     </table>
-    <button type="submit"><a href="/admin/newuser">Add new user</a></button>
+    <a href="${pageContext.request.contextPath}/admin/newuser">Add new user</a>
 
 </sec:authorize>
+<a href="/logout">Logout</a>
 </body>
 </html>

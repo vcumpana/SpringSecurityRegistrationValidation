@@ -3,18 +3,18 @@ package com.springapp.mvc.service;
 import com.springapp.mvc.datasource.UserDao;
 import com.springapp.mvc.model.Gender;
 import com.springapp.mvc.model.Role;
+import com.springapp.mvc.model.RoleName;
 import com.springapp.mvc.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import static com.springapp.mvc.model.RoleName.ROLE_ADMIN;
 import static com.springapp.mvc.model.RoleName.ROLE_USER;
 
 @Service
@@ -37,12 +37,20 @@ public class UserService {
     }
 
     public void registerNewUser(User user) {
-        Set<Role> roles = new HashSet<>();
-        if (user.getUsername().equals("vcumpana"))
-            roles.add(new Role(ROLE_ADMIN));
-        roles.add(new Role(ROLE_USER));
-        user.setRoles(roles);
-        userDao.insertNewUser(user); }
+        if (user.getRoles() == null || user.getRoles().isEmpty()){
+            if (user.getUsername().equals("vcumpana"))
+                user.setRoles(userDao.getRoles());
+            else
+                user.setRoles(userDao.getRoleByRoleName(ROLE_USER));
+        }
+        else {
+            List<RoleName> roles = user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toList());
+            RoleName[] roleArray = new RoleName[roles.size()];
+            roleArray = roles.toArray(roleArray);
+            user.setRoles(userDao.getRoleByRoleName(roleArray));
+        }
+        userDao.insertNewUser(user);
+    }
 
     public boolean saveChangesUser(User user) {
         if (userDao.updateUser(user))
@@ -50,12 +58,12 @@ public class UserService {
         return false;
     }
 
-    public boolean mailIsPresentInDB(String mail) {
-        return userDao.mailIsPresentInDB(mail);
+    public boolean mailIsPresentInDB(String mail, int id) {
+        return userDao.mailIsPresentInDB(mail, id);
     }
 
-    public boolean usernameIsPresentInDB(String username) {
-        return userDao.usernameIsPresentInDB(username);
+    public boolean usernameIsPresentInDB(String username, int id) {
+        return userDao.usernameIsPresentInDB(username, id);
     }
 
     public User getUserById(int id) {
@@ -64,5 +72,13 @@ public class UserService {
 
     public void deleteUserbyId(int id) {
         userDao.deleteUserById(id);
+    }
+
+    public List getRoles() {
+        return userDao.getRoles();
+    }
+
+    public List<User> getUsersByRole(RoleName roleName) {
+        return userDao.getUsersByRole(roleName);
     }
 }

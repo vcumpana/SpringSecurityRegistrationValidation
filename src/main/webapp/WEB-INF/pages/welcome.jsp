@@ -13,5 +13,6 @@
 <p>Next, you can see the full list of <a href="/showFemales">girls</a> or <a href="/showMales">boys</a></p>
 <a href="/edituser">Edit your details</a>
 <a href="/admin/panel">Admin panel</a>
+<a href="/logout">Logout</a>
 </body>
 </html>

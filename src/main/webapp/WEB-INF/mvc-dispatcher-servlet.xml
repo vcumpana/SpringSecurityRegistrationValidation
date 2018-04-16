@@ -39,9 +39,9 @@
         <property name="packagesToScan" value="com.springapp.mvc"/>
         <property name="hibernateProperties">
             <props>
-                <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL9Dialect</prop>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL57Dialect</prop>
                 <prop key="hibernate.show_sql">true</prop>
-                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.hbm2ddl.auto">create-drop</prop>
                 <prop key="debug">true</prop>
             </props>
         </property>
@@ -56,4 +56,24 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
+    <!--<bean-->
+            <!--id="entityManagerFactory"-->
+            <!--class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">-->
+        <!--<property name="jpaPropertyMap">-->
+            <!--<map>-->
+                <!--<entry-->
+                        <!--key="javax.persistence.validation.factory"-->
+                        <!--value-ref="validator"/>-->
+                <!--&lt;!&ndash; ... &ndash;&gt;-->
+            <!--</map>-->
+        <!--</property>-->
+        <!--&lt;!&ndash; ... &ndash;&gt;-->
+    <!--</bean>-->
+
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
 </beans>

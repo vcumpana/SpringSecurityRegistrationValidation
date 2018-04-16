@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
+import java.util.Set;
 
 
 @Data
@@ -18,6 +19,9 @@ public class Role {
 
     @Enumerated(EnumType.STRING)
     private RoleName roleName;
+
+//    @ManyToMany
+//    private Set<User> users;
 
     public Role(RoleName roleUser) {
         roleName = roleUser;

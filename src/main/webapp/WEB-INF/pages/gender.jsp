@@ -9,5 +9,6 @@
 <c:forEach items="${list}" var="user">
     <p>Name: ${user.username} | Password: ${user.password}</p>
 </c:forEach>
+<a href="/logout">Logout</a>
 </body>
 </html>

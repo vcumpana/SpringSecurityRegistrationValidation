@@ -22,14 +22,9 @@
                 <input type="text" name="username" required="required"/>
 
                 <label>Password</label>
-                <input type="password" name="password" required="required"/>
+                <input type="password" name="password" required="required"/><br>
 
-                <label>Gender</label>
-                <p>
-                <input type="radio" name="gender" value="MALE" checked>Male
-                <input type="radio" name="gender" value="FEMALE">Female<br></p>
-
-                <label>Gender</label>
+                <label>Remember me</label>
                 <input type="checkbox" name="remember-me" />
                 <button type="submit">Login</button>
             </div>
