@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -78,7 +79,27 @@ public class UserService {
         return userDao.getRoles();
     }
 
-//    public List<User> getUsersByRole(RoleName roleName) {
-//        return userDao.getUsersByRole(roleName);
-//    }
+    public List<User> getUsersByRole(RoleName roleName) {
+        return userDao.getUsersByRole(roleName);
+    }
+
+    public List<User> getUsersByAge(String ageCategory) {
+        switch (ageCategory){
+            case "under30": return userDao.getUsersUnder30();
+            case "above30": return userDao.getUsersAbove30();
+            default: return null;
+        }
+    }
+
+    public void registerNewRole( Role role) {
+        userDao.insertNewRole(role);
+    }
+
+    public void updateRole(Role role) {
+        userDao.updateRole(role);
+    }
+
+    public void deleteRoleById(int id) {
+        userDao.deleteRoleById(id);
+    }
 }

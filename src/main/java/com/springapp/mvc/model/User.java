@@ -3,8 +3,11 @@ package com.springapp.mvc.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.time.LocalDate;
 import java.util.Collection;
 
 @Entity
@@ -34,7 +37,8 @@ public class User{
     @Transient
     private String repeatPassword;
 
-    private String birthDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthDate;
 
     @NotNull(message = "{user.gender.empty}")
     @Enumerated(EnumType.STRING)
@@ -49,5 +53,14 @@ public class User{
 //            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
 //            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private Collection<Role> roles;
+
+    public void removeRole(RoleName roleName){
+        for (Role role: roles){
+            if (roleName == role.getRoleName()) {
+                roles.remove(role);
+                break;
+            }
+        }
+    }
 
 }

@@ -55,10 +55,6 @@ public class UserDao {
         userDB.setEmail(user.getEmail());
         userDB.setGender(user.getGender());
         userDB.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-      //  List<RoleName> roles = user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toList());
-        //RoleName[] role = new RoleName[roles.size()];
-       // role = roles.toArray(role);
-       // userDB.setRoles(getRoleByRoleName(role));
         sessionFactory.getCurrentSession().merge(userDB);
         return true;
     }
@@ -98,6 +94,12 @@ public class UserDao {
                 .list();
     }
 
+    private Role getRoleById(int id) {
+        return (Role)sessionFactory.getCurrentSession()
+                .createQuery("from Role where id =:id")
+                .setParameter("id", id).list().stream().findFirst().get();
+    }
+
     public Collection<Role> getRoleByRoleName(RoleName ... roles) {
         Query query= sessionFactory.getCurrentSession()
                 .createQuery("from Role where roleName IN (:role)");
@@ -105,6 +107,47 @@ public class UserDao {
         return query.getResultList();
     }
 
-//    public List<User> getUsersByRole(RoleName roleName) {
-//    }
+    public List<User> getUsersByRole(RoleName roleName) {
+        return sessionFactory.getCurrentSession()
+                .createQuery("from User u join fetch u.roles r where r.roleName=:roleName")
+                .setParameter("roleName", roleName).list();
+    }
+
+    public List<User> getUsersUnder30() {
+        return sessionFactory.getCurrentSession()
+                .createQuery("from User u where Year(CURRENT_DATE()) - Year(u.birthDate) < 30")
+                .list();
+    }
+
+    public List<User> getUsersAbove30() {
+        return sessionFactory.getCurrentSession()
+                .createQuery("from User u where Year(CURRENT_DATE()) - Year(u.birthDate) >= 30")
+                .list();
+    }
+
+    public void insertNewRole(Role role) {
+        sessionFactory.getCurrentSession().save(role);
+    }
+
+    public void updateRole(Role role) {
+        Role roleDB = getRoleById(role.getId());
+        roleDB.setRoleName(role.getRoleName());
+        sessionFactory.getCurrentSession().merge(roleDB);
+    }
+
+    public void deleteRoleById(int id) {
+//        sessionFactory.getCurrentSession().createQuery(" delete from users_role where roles_id=:id")
+//                                            .setParameter("id", id)
+//                                            .executeUpdate();
+//        sessionFactory.getCurrentSession().createQuery(" delete from Role where id=:id")
+//                                            .setParameter("id", id)
+//                                            .executeUpdate();
+        Role role = getRoleById(id);
+        List<User> users = getListOfUsers();
+        for(User user:users) {
+            user.removeRole(role.getRoleName());
+            sessionFactory.getCurrentSession().merge(user);
+        }
+        sessionFactory.getCurrentSession().remove(role);
+    }
 }
