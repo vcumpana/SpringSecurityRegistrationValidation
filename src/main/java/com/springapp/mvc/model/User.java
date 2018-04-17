@@ -1,29 +1,22 @@
 package com.springapp.mvc.model;
 
-import com.springapp.mvc.constraints.EmailUniquenessConstraint;
-import com.springapp.mvc.constraints.RePasswordConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Collection;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-//@RePasswordConstraint(field = "password",confirmingField = "repeatPassword", message = "{user.repassword.invalid}")
 public class User{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
 
     @NotEmpty(message ="{user.name.empty}" )
     private String name;
@@ -49,7 +42,6 @@ public class User{
 
     @Column(unique = true)
     @Email(message = "{user.email.invalid}")
-   // @EmailUniquenessConstraint(message = "{user.email.exists}")
     private String email;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

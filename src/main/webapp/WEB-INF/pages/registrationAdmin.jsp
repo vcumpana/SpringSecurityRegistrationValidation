@@ -40,7 +40,7 @@
                     <br></p>
 
                 <label>Birthday</label>
-                <form:input type="date" path="birthDate"/>
+                <form:input type="date" path="birthDate"/><br>
                 <form:errors path="birthDate" cssClass="error" /><br>
 
 
@@ -57,11 +57,7 @@
 
                 <label>Roles</label>
                 <form:select multiple="true" path="roles" items="${roles}" itemLabel="roleName" itemValue="roleName" />
-                <%--<form:select path="roles" multiple="">--%>
-                    <%--<<option value="ROLE_ADMIN">ADMIN</option>--%>
-                    <%--&lt;%&ndash;<input type="radio" value="ROLE_USER">USER<input>&ndash;%&gt;--%>
-                    <%--<option value="ROLE_USER" selected>USER</option>--%>
-                <%--</form:select>--%>
+                <br>
                 <label>Password</label>
                 <form:input type="text" path="password" required="required"/>
                         <form:errors path="password" cssClass="error" /><br>

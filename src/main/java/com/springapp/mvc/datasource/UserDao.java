@@ -20,13 +20,11 @@ public class UserDao {
     @Autowired
     private SessionFactory sessionFactory;
 
-
     public Optional<User> getUserByName(String username) {
         TypedQuery<User> query = sessionFactory.getCurrentSession()
                 .createQuery("select u from User u where username=:name",
                         User.class);
         query.setParameter("name", username);
-
         return query.getResultList().stream().findFirst();
     }
 
@@ -41,7 +39,6 @@ public class UserDao {
         Query query = sessionFactory.getCurrentSession()
                 .createQuery("from User where gender=:gender");
         query.setParameter("gender", gender);
-
         return query.getResultList();
     }
 
@@ -108,6 +105,6 @@ public class UserDao {
         return query.getResultList();
     }
 
-    public List<User> getUsersByRole(RoleName roleName) {
-    }
+//    public List<User> getUsersByRole(RoleName roleName) {
+//    }
 }

@@ -41,7 +41,6 @@ public class UserController {
         return "secret";
     }
 
-
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String printWelcome(Model model) {
         if (!model.containsAttribute("message"))
@@ -52,12 +51,12 @@ public class UserController {
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public String printRegistration(Model model) {
         model.addAttribute("message", "Hi there! Register, please");
-        model.addAttribute("user",new User());
+        model.addAttribute("user", new User());
         return "registration";
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public String registerUser(Model model, @Valid @ModelAttribute("user") User user,  BindingResult result,RedirectAttributes attributes) {
+    public String registerUser(Model model, @Valid @ModelAttribute("user") User user, BindingResult result, RedirectAttributes attributes) {
         boolean mailIsPresent = userService.mailIsPresentInDB(user.getEmail(), user.getId());
         if (mailIsPresent)
             model.addAttribute("uniquemail", "Choose another email!A user with this email already exists.");
@@ -75,8 +74,8 @@ public class UserController {
     }
 
 
-        @RequestMapping(value = "/edituser", method = RequestMethod.POST)
-    public String saveChangesUser(Model model, @Valid @ModelAttribute("user") User user, BindingResult result){
+    @RequestMapping(value = "/edituser", method = RequestMethod.POST)
+    public String saveChangesUser(Model model, @Valid @ModelAttribute("user") User user, BindingResult result) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> loggedUser = userService.getUserByName(username);
         boolean mailIsPresent = userService.mailIsPresentInDB(user.getEmail(), user.getId());
@@ -94,13 +93,13 @@ public class UserController {
         if (loggedUser.isPresent())
             user.setId(loggedUser.get().getId());
         if (userService.saveChangesUser(user)) {
-           // ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).setUsername(user.getUsername());
-            Collection<SimpleGrantedAuthority> nowAuthorities =(Collection<SimpleGrantedAuthority>)SecurityContextHolder
+            // ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).setUsername(user.getUsername());
+            Collection<SimpleGrantedAuthority> nowAuthorities = (Collection<SimpleGrantedAuthority>) SecurityContextHolder
                     .getContext().getAuthentication().getAuthorities();
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), nowAuthorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-            return "welcome";
+        return "welcome";
     }
 
     @RequestMapping(value = "/edituser", method = RequestMethod.GET)
@@ -138,7 +137,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/admin/panel", method = RequestMethod.GET)
-    public String showAdminPanel(Model model){
+    public String showAdminPanel(Model model) {
         model.addAttribute("users", userService.getAllUsers());
         return "adminpanel";
     }

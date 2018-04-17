@@ -78,7 +78,7 @@ public class UserService {
         return userDao.getRoles();
     }
 
-    public List<User> getUsersByRole(RoleName roleName) {
-        return userDao.getUsersByRole(roleName);
-    }
+//    public List<User> getUsersByRole(RoleName roleName) {
+//        return userDao.getUsersByRole(roleName);
+//    }
 }

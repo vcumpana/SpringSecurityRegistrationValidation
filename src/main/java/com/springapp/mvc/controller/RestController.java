@@ -39,13 +39,13 @@ public class RestController {
         return userService.getAllByGender(gender);
     }
 
-    @GetMapping(value = "/rest/users/role/", params = "role")
-    public @ResponseBody List<User> getUsersByRole(@PathVariable("role") RoleName roleName){
-        return userService.getUsersByRole(roleName);
-    }
+//    @GetMapping(value = "/rest/users/role/", params = "role")
+//    public @ResponseBody List<User> getUsersByRole(@PathVariable("role") RoleName roleName){
+//        return userService.getUsersByRole(roleName);
+//    }
 
-    @GetMapping(value = "/rest/users/age/", params = "age")
-    public @ResponseBody List<User> getUsersByAge(@PathVariable("age") int age){
-        return userService.getUsersByAge(age);
-    }
+//    @GetMapping(value = "/rest/users/age/", params = "age")
+//    public @ResponseBody List<User> getUsersByAge(@PathVariable("age") int age){
+//        return userService.getUsersByAge(age);
+//    }
 }

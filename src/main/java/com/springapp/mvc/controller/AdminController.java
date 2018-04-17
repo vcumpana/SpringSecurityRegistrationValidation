@@ -40,8 +40,10 @@ public class AdminController {
         boolean doesPassMatch = user.getPassword().equals(user.getRepeatPassword());
         if (!doesPassMatch)
             model.addAttribute("repassword", "Repeated password does not match.");
-        if (result.hasErrors() || mailIsPresent || usernameIsPresent || !doesPassMatch)
+        if (result.hasErrors() || mailIsPresent || usernameIsPresent || !doesPassMatch) {
+            model.addAttribute("roles", userService.getRoles());
             return "registrationAdmin";
+        }
         userService.registerNewUser(user);
         return "redirect:/admin/panel";
     }
@@ -89,10 +91,6 @@ public class AdminController {
 
     @InitBinder
     protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
-//do whatever
-        /* "foos" is the name of the property that we want to register a custom editor to
-         * you can set property name null and it means you want to register this editor for occurrences of Set class in * command object
-         */
         binder.registerCustomEditor(Collection.class, "roles", new CustomCollectionEditor(Collection.class) {
             @Override
             protected Object convertElement(Object element) {

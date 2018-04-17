@@ -42,6 +42,7 @@
 
                 <label>Birthday</label>
                 <form:input type="date" path="birthDate"/>
+                <br>
                 <form:errors path="birthDate" cssClass="error" /><br>
 
 
